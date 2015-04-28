@@ -1,0 +1,453 @@
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+
+% envioronment detect
+% Xelatex is the engine?or pdflatex or luatex
+% https://www.ctan.org/tex-archive/macros/generic/ifxetex
+\usepackage{ifxetex,ifluatex}
+
+% deal with compatible problem that is early package
+% http://texdoc.net/texmf-dist/doc/latex/base/fixltx2e.pdf
+\usepackage{fixltx2e} % provides \textsubscript
+
+
+% layout
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
+
+
+
+$if(highlighting-macros)$
+    $highlighting-macros$
+$endif$
+
+$if(verbatim-in-note)$
+    \usepackage{fancyvrb}
+    \VerbatimFootnotes
+$endif$
+
+
+\usepackage{indentfirst}
+
+% for math equation display
+\usepackage{amssymb,amsmath}
+\ifxetex
+    % mathspec 是以 fontspec 為後端，可以在 XeLaTeX 文稿中選擇使用特定的其他數學字型。
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+\else
+    \usepackage{fontspec}
+\fi
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+
+\usepackage{mathptmx}
+
+% there the english and chinese font will be parameter
+\usepackage[indentfirst=false]{xeCJK}
+\defaultfontfeatures{Mapping=tex-text}
+% 設定中英文的字型
+% 字型的設定可以使用系統內的字型，而不用像以前一樣另外安裝
+% set chinese font
+\setCJKmainfont{ukai.ttc}
+% set english font
+\setmainfont{Times New Roman}
+
+% 中文自動換行
+\XeTeXlinebreaklocale "zh"
+% 文字的彈性間距
+\XeTeXlinebreakskip = 0pt plus 1pt
+\newfontlanguage{Chinese}{CHN}
+
+% can add non-formatted text , or render colorful word
+$if(listings)$
+    \usepackage{listings}
+    \lstset{
+       breaklines=true,
+    }
+$endif$
+
+% pandoc will treat the document as literate Haskell source
+% http://pandoc.org/demo/example19/Literate-Haskell-support.html
+$if(lhs)$
+    \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+    
+    
+$endif$
+
+%修改標題名稱
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
+\renewcommand\contentsname{目錄}
+\renewcommand\listfigurename{圖目錄}
+\renewcommand\listtablename{表目錄}
+\renewcommand{\abstractname}{Abstract}
+\renewcommand\bibname{參考文獻}
+\newcommand{\loflabel}{圖}
+\newcommand{\lotlabel}{表}
+
+
+% font setup
+\usepackage{sectsty}
+\usepackage{setspace}
+
+% 章次20級，節次16級，小節次以下14級，本文12級字
+\def\LARGE{\fontsize{20}{30}\selectfont}%章次
+\def\Large{\fontsize{16}{24}\selectfont}%節次
+\def\large{\fontsize{14}{21}\selectfont}%小節次
+\chapterfont{\LARGE}
+\sectionfont{\Large}
+\subsectionfont{\large}
+
+\usepackage{titlesec}
+\usepackage{titletoc}
+
+% A pack­age pro­vid­ing an in­ter­face to sec­tion­ing com­mands for se­lec­tion from var­i­ous ti­tle styles.
+% E.g., marginal ti­tles and to change the font of all head­ings with a sin­gle com­mand, also pro­vid­ing
+% sim­ple one-step page styles. Also in­cludes a pack­age to change the page styles when there are floats in a page.
+% You may as­sign head­ers/foot­ers to in­di­vid­ual floats, too.
+\titlespacing{\chapter}{0pt}{*0}{*2}
+\titlespacing{\section}{0pt}{*1}{*1}
+\titlespacing{\subsection}{0pt}{*1}{*1}
+\titlespacing{\subsubsection}{0pt}{*1}{*1}
+
+
+% reset the chapter format
+\usepackage{CJKnumb}
+\titleformat{\chapter}[hang]{\bfseries\LARGE\centering}{第\CJKnumber{\arabic{chapter}}章}{0.5em}{}
+\titlecontents{chapter}[0em] {}{\normalfont\normalsize\bfseries\makebox[4.1em][l] {第\CJKnumber{\thecontentslabel}章}}{} {\titlerule*[0.7pc]{.}\contentspage}
+
+% if linestretch variable is set up
+% enable below script
+
+% line space
+$if(linestretch)$
+    \usepackage{setspace}
+    \setstretch{$linestretch$}
+$endif$
+
+
+
+% 設定行距
+\linespread{1}\selectfont
+
+
+% paragraph setting
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\newcommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{indentfirst}
+
+% Paragraph set
+
+
+% Redefines (sub)paragraphs to behave more like sections
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+
+
+$if(verbatim-in-note)$
+    \usepackage{fancyvrb}
+    \VerbatimFootnotes
+$endif$
+
+$if(verbatim-in-note)$
+    \VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+
+% use for subfigures
+% set up image load path
+% Figures
+\usepackage{graphicx,grffile}
+\graphicspath{ {../img/} }
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{figure}
+
+
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+$if(tables)$
+    \usepackage{longtable,booktabs}
+$endif$
+\usepackage{multirow}
+% set header and footer
+% use default style, if don't need this, just comment the package
+\usepackage{fancyhdr}
+\pagestyle{plain}
+%  left (L), right (R) and centre (C), odd (O) or even (E) pa
+% \fancyhead{}
+% clear the header
+% \fancyhead[RO,LE]{Thesis Title}
+% \fancyfoot{}
+% \fancyfoot[LE,RO]{\thepage}
+% \fancyfoot[LO,CE]{Chapter \thechapter}
+% \fancyfoot[CO,RE]{Author Name}
+
+
+% change the thickness of the lines in the headers and footers we use this code entering a size in points:
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+$if(biblatex)$
+    \usepackage[backend=bibtex, style=numeric, sorting=nty]{biblatex}
+    $if(biblio-files)$
+        %\bibliography{$biblio-files$}
+        \addbibresource{$biblio-files$}
+    $endif$
+$endif$
+% wallpaper
+\usepackage{wallpaper}
+\makeatletter
+
+\newcommand\frontmatter{
+    \cleardoublepage
+    \pagenumbering{roman}
+}
+
+\newcommand\mainmatter{
+    \cleardoublepage
+    \pagenumbering{arabic}
+}
+
+\newcommand\backmatter{
+    \if@openright
+        \cleardoublepage
+    \else
+        \clearpage
+    \fi
+}
+% Add clickable links to a section/subsection with a PDF document
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks   = true,    % Colours links instead of ugly boxes
+    urlcolor     = blue,    % Colour for external hyperlinks
+    linkcolor    = blue,    % Colour of internal links
+    citecolor    = red      % Colour of citations
+}
+
+\urlstyle{same}
+
+$if(links-as-notes)$
+    % Make links footnotes instead of hotlinks:
+    \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$for(header-includes)$
+    $header-includes$
+$endfor$
+
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+    \usepackage{microtype}
+    \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\date{\today}
+
+% 月 轉換成對應 英文月 單字 1 -> January
+\newcommand{\MONTH}{
+    \ifcase\the\month
+        \or January% 1
+        \or February% 2
+        \or March% 3
+        \or April% 4
+        \or May% 5
+        \or June% 6
+        \or July% 7
+        \or August% 8
+        \or September% 9
+        \or October% 10
+        \or November% 11
+        \or December% 12
+    \fi
+}
+
+% 計算民國幾年
+\usepackage{calc}
+\newcounter{tyear}
+\setcounter{tyear}{\year-1911}
+
+% 民國 \yearzh{} 年 \monthzh{} 月
+\newcommand{\yearzh}{\thetyear}
+\newcommand{\monthzh}{\the\month}
+
+% 西元 \monthen{}, \monthen{}
+\newcommand{\yearen}{\the\year}
+\newcommand{\monthen}{\MONTH}
+
+\begin{document}
+
+
+    \begin{titlepage}
+        \vspace{1cm}
+        \begin{singlespace}
+        \begin{center}
+            \fontsize{36}{54}\selectfont{
+                $university_zh$\par
+            }
+            \fontsize{28}{42}\selectfont{
+                $institute_zh$\par
+            }
+
+            \fontsize{24}{36}\selectfont{
+                碩士論文\par
+            }
+
+            \fontsize{20}{30}\selectfont{
+                $title_zh$\par
+                $title_en$\par
+            }
+
+            \vspace{\fill}
+
+            \fontsize{18}{27}\selectfont{
+                研究生：$author_zh$\par
+                指導教授：$advisor_zh$\par
+            }
+
+            \vspace{1.5cm}
+            \fontsize{16}{24}\selectfont{
+                中華民國 \thetyear{} 年 \monthzh{} 月\par
+                %\monthen{}, \yearen{} \par
+            }
+        \end{center}
+        \end{singlespace}
+        \vspace{1cm}
+    \end{titlepage}
+
+    \begin{titlepage}
+        \vspace{1cm}
+        \begin{singlespace}
+            \begin{center}
+                \fontsize{20}{30}\selectfont{
+                    $title_zh$\par
+                    $title_en$\par
+                }
+                \fontsize{14}{21}\selectfont{
+                    研究生：$author_zh$ \hfill Student : $author_en$\\
+                    指導教授：$advisor_zh$ \hfill Advisor : $advisor_en$\par
+                }
+                \vspace{1.5cm}
+                \fontsize{14}{21}\selectfont{
+                    $university_zh$\par
+                    $institute_zh$\par
+                    碩士論文\par
+                    A  Thesis Submitted to $institute_en$\par
+                    $collage_en$\par
+                    $university_en$\par
+                    in Partial Fulfillment of the Requirements\par
+                    for the Degree of Master of Science in\par
+                    $institute_en$\par
+                }
+                \vspace{\fill}
+                \vspace{1.5cm}
+                \fontsize{12}{20}\selectfont{
+                    \monthen{}, \yearen{}\par
+                    Huwei, Yunlin, Taiwan, Republic of China\par
+                }
+                \fontsize{16}{24}\selectfont{
+                    中華民國 \thetyear{} 年 \monthzh{} 月\par
+                }
+            \end{center}
+        \end{singlespace}
+        \vspace{1cm}
+    \end{titlepage}
+
+
+    % 插入浮水印
+    \CenterWallPaper{0.5}{watermark.jpg}
+
+    % set front page
+    % and set page number to arabic i ii...
+    % \pagenumbering{arabic}
+    \frontmatter
+
+    \chapter*{$title_zh$}
+    \addcontentsline{toc}{chapter}{中文摘要}
+    \begin{center}
+        \vspace{0.4cm}
+        \fontsize{14}{21}\selectfont
+        學生:$author_zh$ \hfill 指導教授:$advisor_zh$\par
+        \vspace{1cm}
+        \fontsize{14}{21}\selectfont{
+            $university_zh$ $institute_zh$\par
+        }
+        \vspace{0.9cm}
+        \fontsize{20}{30}\selectfont{
+            \textbf{摘要}
+        }
+    \end{center}
+    % the abstract content
+    $abstract_zh$
+
+
+    \chapter*{$title_en$}
+    \addcontentsline{toc}{chapter}{英文摘要}
+    \begin{center}
+        \vspace{0.4cm}
+        \fontsize{14}{21}\selectfont
+        Student：$author_en$ \hfill Advisor：$advisor_en$\\
+        \vspace{1cm}
+        \fontsize{14}{21}\selectfont{
+            $institute_en$\\$university_en$\par
+        }
+        \vspace{0.9cm}
+        \fontsize{20}{30}\selectfont{
+            \textbf{Abstract}
+        }
+    \end{center}
+    % the abstract content
+    $abstract_en$
+
+    $for(include-before)$
+        $include-before$
+    $endfor$
+
+    % table of content
+    $if(toc)$
+        \begingroup
+            \singlespacing
+            % table of content
+            \tableofcontents
+
+            % figure table
+            \renewcommand{\numberline}[1]{\loflabel~#1\hspace*{1em}}
+            \listoffigures
+
+            % table of table
+            \renewcommand{\numberline}[1]{\lotlabel~#1\hspace*{1em}}
+            \listoftables
+        \endgroup
+    $endif$
+    
+    % start normal page number, 1 2 3
+    \mainmatter
+        
+    $body$
+    
+    \cleardoublepage
+    
+    $if(biblatex)$
+        \renewcommand\bibname{參考文獻}
+        \addcontentsline{toc}{chapter}{參考文獻}
+        \printbibliography
+    $endif$
+    
+    $for(include-after)$
+        $include-after$
+    $endfor$
+
+\end{document}
