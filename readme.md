@@ -6,3 +6,11 @@
 由標記語言 Markdown 轉換為 Latex
 
 最後再由 Xelatex + Bibtex 製成 PDF
+
+--------
+
+requirements:
+
+- leo editor
+- xelatex + bibtex
+- pandoc

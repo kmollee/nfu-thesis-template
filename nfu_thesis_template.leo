@@ -18,7 +18,7 @@
 <v t="lee.20150428175241.2"><vh>@button makepdf</vh></v>
 <v t="lee.20150428175241.3"><vh>@button clean</vh></v>
 </v>
-<v t="lee.20150428174834.1"><vh>@path ./</vh>
+<v t="lee.20150428174834.1" a="E"><vh>@path ./</vh>
 <v t="lee.20150428174637.2"><vh>@clean readme.md</vh></v>
 <v t="lee.20150428175132.1"><vh>@clean template.tex</vh>
 <v t="lee.20150428175132.2"><vh>&lt;&lt;documentclass&gt;&gt;</vh></v>
@@ -99,7 +99,15 @@
 
 由標記語言 Markdown 轉換為 Latex
 
-最後再由 Xelatex + Bibtex 製成 PDF</t>
+最後再由 Xelatex + Bibtex 製成 PDF
+
+--------
+
+requirements:
+
+- leo editor
+- xelatex + bibtex
+- pandoc</t>
 <t tx="lee.20150428174834.1"></t>
 <t tx="lee.20150428175132.1">&lt;&lt;documentclass&gt;&gt;
 
