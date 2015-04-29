@@ -10,7 +10,7 @@
 <preferences/>
 <find_panel_settings/>
 <vnodes>
-<v t="lee.20150428175327.1"><vh>@settings</vh>
+<v t="lee.20150428175327.1" a="E"><vh>@settings</vh>
 <v t="lee.20150428175327.2"><vh>@data qt-gui-plugin-style-sheet</vh></v>
 <v t="lee.20150428175327.3"><vh>@string initial_split_orientation = horizontal</vh></v>
 </v>
@@ -20,7 +20,7 @@
 </v>
 <v t="lee.20150428174834.1" a="E"><vh>@path ./</vh>
 <v t="lee.20150428174637.2"><vh>@clean readme.md</vh></v>
-<v t="lee.20150428175132.1"><vh>@clean template.tex</vh>
+<v t="lee.20150428175132.1" a="E"><vh>@clean template.tex</vh>
 <v t="lee.20150428175132.2"><vh>&lt;&lt;documentclass&gt;&gt;</vh></v>
 <v t="lee.20150428175132.3" a="E"><vh>&lt;&lt;preamble&gt;&gt;</vh>
 <v t="lee.20150428175132.4"><vh>base_package</vh></v>
@@ -50,7 +50,7 @@
 <v t="lee.20150428181518.1"><vh>@clean .gitignore</vh></v>
 <v t="lee.20150428175721.1"><vh>@path ./img</vh></v>
 <v t="lee.20150428175252.1"><vh>@path ./tmp/</vh></v>
-<v t="lee.20150428175429.1"><vh>#content</vh>
+<v t="lee.20150428175429.1" a="E"><vh>#content</vh>
 <v t="lee.20150428175429.2"><vh>setting</vh></v>
 <v t="lee.20150428175429.3" a="E"><vh>第一章節</vh>
 <v t="lee.20150428175429.4" a="E"><vh>校史</vh>
@@ -59,7 +59,8 @@
 <v t="lee.20150428175429.7"><vh>科技大學時期</vh></v>
 </v>
 <v t="lee.20150428175429.8"><vh>News</vh></v>
-<v t="lee.20150428175429.9"><vh>Music</vh></v>
+<v t="lee.20150428175429.9"><vh>Lyric</vh></v>
+<v t="lee.20150429063124.1"><vh>徐志摩</vh></v>
 <v t="lee.20150428175429.10"><vh>Table</vh></v>
 <v t="lee.20150428175429.11" a="E"><vh>List</vh>
 <v t="lee.20150428175429.12"><vh>Bullet lists</vh></v>
@@ -83,10 +84,10 @@
 <v t="lee.20150428175429.26"><vh>結論</vh></v>
 <v t="lee.20150428175429.27"><vh>未來展望</vh></v>
 </v>
-<v t="lee.20150428175429.28"><vh>文獻</vh></v>
 </v>
-<v t="lee.20150428180057.1"><vh>#appendix</vh>
-<v t="lee.20150428180106.1"><vh>附錄</vh></v>
+<v t="lee.20150428180057.1" a="E"><vh>#appendix</vh>
+<v t="lee.20150428180106.1"><vh>歷任校長</vh></v>
+<v t="lee.20150428203056.1"><vh>再別康橋</vh></v>
 </v>
 <v t="lee.20150428175613.1"><vh>#refer</vh></v>
 </vnodes>
@@ -126,6 +127,8 @@ requirements:
     \cleardoublepage
     
     &lt;&lt;bib&gt;&gt;
+    
+    \newpage
     
     &lt;&lt;appendix&gt;&gt;
 
@@ -371,8 +374,14 @@ $endif$</t>
     \addcontentsline{toc}{chapter}{參考文獻}
     \printbibliography
 $endif$</t>
-<t tx="lee.20150428175132.23">$for(include-after)$
-    $include-after$
+<t tx="lee.20150428175132.23">\renewcommand\appendixtocname{附錄}
+\renewcommand\appendixpagename{附錄}
+
+\appendix
+\appendixpage
+$for(include-after)$
+$include-after$
+
 $endfor$</t>
 <t tx="lee.20150428175132.3">@others</t>
 <t tx="lee.20150428175132.4">% envioronment detect
@@ -401,8 +410,23 @@ $endif$
 
 
 \usepackage{indentfirst}
+%\usepackage[toc,page]{appendix}
+%\usepackage[dutch]{babel}
+\usepackage[toc,page]{appendix}
 
-</t>
+
+\usepackage{cleveref}
+
+\makeatletter
+\newcommand\appendix@section[1]{%
+  \refstepcounter{section}%
+  % arabic 123, Alph ABC, Roman I II
+  \orig@section*{附錄 \@arabic\c@section: #1\centering}%
+  \addcontentsline{toc}{section}{附錄 \@arabic\c@section: #1}%
+}
+\let\orig@section\section
+\g@addto@macro\appendix{\let\section\appendix@section}
+\makeatother</t>
 <t tx="lee.20150428175132.5">% for math equation display
 \usepackage{amssymb,amsmath}
 \ifxetex
@@ -636,29 +660,41 @@ def write_file(path, content):
     with open(path, 'w+') as output:
         output.write(content)
 
-
+# 收集內容
+# 內文 囊括 章節
 chapters = recursive_join(get_node('#content')[0])
+# 附錄內容
 appendix = recursive_join(get_node('#appendix')[0])
+# 參考文獻內容
 refer = get_node('#refer')[0].b
 
+# 合併檔案
 source = 'all.md'
+# 輸出檔名
 target = 'all.tex'
 
 d = c.scanAllDirectives(p)
 tmp = os.path.join(d.get('path'), 'tmp')
-myfile = os.path.join(tmp, source)
+# 檢測輸出資料夾是否存在，如否則新增一個
 create_or_none(tmp)
 
+
+# 寫入之前收集的檔案
 write_file(tmp + '/chapters.md', chapters)
 write_file(tmp + '/appendix.md', appendix)
 write_file(tmp + '/refer.bib', refer)
 
+# 切換目錄至 tmp 資料夾
 os.chdir(tmp)
 
-os.system('pandoc -S %s -o %s --latex-engine=xelatex' % ('appendix.md', 'appendix.tex'))
+# 將附錄轉換成 tex 檔案
+#os.system('pandoc -f markdown -t latex %s -o %s --latex-engine=xelatex' % ('appendix.md', 'appendix.tex'))
+os.system('pandoc --atx-headers %s -o %s --latex-engine=xelatex' % ('appendix.md', 'appendix.tex'))
 
-os.system('pandoc --toc --atx-headers -V documentclass=report -s %s -o %s --latex-engine=xelatex --biblatex --template=../template.tex' % ('chapters.md', 'all.tex'))
+# 將內容轉換為 tex 檔案 並參照參考文獻
+os.system('pandoc --chapters --toc --atx-headers --include-after-body=appendix.tex -V documentclass=report %s -o %s --latex-engine=xelatex --biblatex --template=../template.tex' % ('chapters.md', 'all.tex'))
 
+# 開始將 tex 轉換成 pdf
 os.system('xelatex all.tex')
 os.system('bibtex all')
 os.system('xelatex all.tex')
@@ -1171,10 +1207,6 @@ For every action there is an equal and opposite reaction.
 <t tx="lee.20150428175429.27">## 未來展望
 
 我覺得可以更棒</t>
-<t tx="lee.20150428175429.28">
-# 準備印出文獻
-
-</t>
 <t tx="lee.20150428175429.3"># 緒論
 
 國立虎尾科技大學，簡稱虎尾科大、虎科大或虎科，是一所座落於中華民國台灣雲林縣虎尾鎮的國立科技大學。因應臺灣發展精密工業之需求，故奉中華民國教育部之令於1980年7月創校，以原虎尾高中校地多次改建而成。虎尾科大緊臨虎尾糖廠、虎尾驛與虎尾溪，校園週遭因而留下不少台灣日治時期的建築古蹟。
@@ -1287,7 +1319,7 @@ At least 15 officers have been hurt, mostly hit by flying objects. Capt. J. Eric
 The police said early in the day they had received a “credible threat” that “members of various gangs, including the Black Guerrilla family, Bloods and Crips” had “entered into a partnership to ‘take out’ law enforcement officers.”
 
 The violence broke out in the Mondawmin neighborhood, near the New Shiloh Baptist Church, where friends, neighbors, activists and government officials from the local level to the White House — as well as civil rights leaders like the Rev. Jesse L. Jackson and Dick Gregory — had gathered in the morning to eulogize Mr. Gray.</t>
-<t tx="lee.20150428175429.9">## Music
+<t tx="lee.20150428175429.9">## Lyric
 
     竹籬上 停留著 蜻蜓
     玻璃瓶裡插滿 小小 森林
@@ -1343,7 +1375,7 @@ The violence broke out in the Mondawmin neighborhood, near the New Shiloh Baptis
 }</t>
 <t tx="lee.20150428175721.1">這個文件夾存放圖檔</t>
 <t tx="lee.20150428180057.1">這邊寫下附錄章節</t>
-<t tx="lee.20150428180106.1"># 附錄
+<t tx="lee.20150428180106.1"># 歷任校長
 
 | 任別  |  姓名 | 擔任期間                                             | 最高學歷   |
 |--------|--------|-----------------------------------------------------|--------------------------------|
@@ -1351,11 +1383,45 @@ The violence broke out in the Mondawmin neighborhood, near the New Shiloh Baptis
 | 第二任 | 余政光 | 1989年8月─1999年                                    | 英國渥立克大學電機博士         |
 | 第三任 | 林見昌 | 1999年10月─2005年                                   | 美國喬治亞理工學院工程科學博士 |
 | 第四任 | 林振德 | 2006年2月─ 2013年                                   | 美國奧克拉荷馬大學機械博士     |
-| 第五任 | 覺文郁 | 2013年8月─                                          | 英國曼徹斯特理工學院機械工程博士 |</t>
+| 第五任 | 覺文郁 | 2013年8月─                                          | 英國曼徹斯特理工學院機械工程博士 |
+
+</t>
 <t tx="lee.20150428181518.1">env/
 __pycache__/
 *.py[cod]
 
 tmp/</t>
+<t tx="lee.20150428203056.1"># 再別康橋{#byecambridge}
+    
+標頭使用自定義的 label， 以便文中可以引用，不能用底線或是空白或中文
+
+pandoc 會將其轉譯，因此儘量用一個單字或是使用不間隔羅馬拼音作為 identify
+
+
+    徐志摩－－再別康橋
+    
+    輕輕的我走了，正如我輕輕的來；
+    我輕輕的招手，作別西天的雲彩。
+    那河畔的金柳 是夕陽中的新娘；
+    波光裡的艷影，在我的心頭蕩漾。
+    
+    軟泥上的青荇 油油的在水底招搖：
+    在康河的柔波裡 我甘心做一條水草！
+    那榆蔭下的一潭，不是清泉，是天上虹；
+    揉碎在浮藻間，沉澱著彩虹似的夢。
+    尋夢？撐一支長篙 向青草更青處漫溯，
+    滿載一船星輝，在星輝斑爛裡放歌。
+    
+    但我不能放歌，悄悄是別離的笙簫；
+    夏蟲也為我沉默，沉默是今晚的康橋！
+    悄悄的我走了，正如我悄悄的來；
+    我揮一揮衣袖，不帶走一片雲彩。
+
+
+</t>
+<t tx="lee.20150429063124.1">## 徐志摩
+
+詳情請看 附錄\ref{byecambridge}
+</t>
 </tnodes>
 </leo_file>
