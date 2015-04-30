@@ -14,3 +14,14 @@ requirements:
 - leo editor
 - xelatex + bibtex
 - pandoc
+
+---------
+
+User guide
+
+- 在 `#content` 節點，下新增論文章節內容
+- 在 `#refer` 節點，新增參考文獻
+- 在 `#appendix` 節點，新增附錄
+- 在 `#content` 節點下的 `settings` 節點，調整設定（如：論文題目）
+- 使用 `makepdf` 按鈕於 `tmp\` 資料夾下產生 pdf
+- 使用 `clean` 按鈕於 `tmp\` 資料夾清理所有檔案

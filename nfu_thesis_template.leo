@@ -51,7 +51,7 @@
 <v t="lee.20150428175721.1"><vh>@path ./img</vh></v>
 <v t="lee.20150428175252.1"><vh>@path ./tmp/</vh></v>
 <v t="lee.20150428175429.1" a="E"><vh>#content</vh>
-<v t="lee.20150428175429.2"><vh>setting</vh></v>
+<v t="lee.20150428175429.2"><vh>settings</vh></v>
 <v t="lee.20150428175429.3" a="E"><vh>第一章節</vh>
 <v t="lee.20150428175429.4" a="E"><vh>校史</vh>
 <v t="lee.20150428175429.5"><vh>工專時期</vh></v>
@@ -108,7 +108,18 @@ requirements:
 
 - leo editor
 - xelatex + bibtex
-- pandoc</t>
+- pandoc
+
+---------
+
+User guide
+
+- 在 `#content` 節點，下新增論文章節內容
+- 在 `#refer` 節點，新增參考文獻
+- 在 `#appendix` 節點，新增附錄
+- 在 `#content` 節點下的 `settings` 節點，調整設定（如：論文題目）
+- 使用 `makepdf` 按鈕於 `tmp\` 資料夾下產生 pdf
+- 使用 `clean` 按鈕於 `tmp\` 資料夾清理所有檔案</t>
 <t tx="lee.20150428174834.1"></t>
 <t tx="lee.20150428175132.1">&lt;&lt;documentclass&gt;&gt;
 
@@ -1187,6 +1198,7 @@ Every object in a state of uniform motion tends to remain in that state of motio
     \sum F = 0 \Leftrightarrow \frac{dv}{dt} = 0
 \end{equation}</t>
 <t tx="lee.20150428175429.23">## Second law
+
 The relationship between an object's mass m, its acceleration a, and the applied force $F$ is $F = ma$. Acceleration and force are vectors (as indicated by their symbols being displayed in slant bold font); in this law the direction of the force vector is the same as the direction of the acceleration vector. 
 
 \begin{equation}
